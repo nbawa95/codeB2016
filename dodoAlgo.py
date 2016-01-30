@@ -147,8 +147,8 @@ def executeBuy(stockTuple):
             if amountToBuy > dic["numStocks"]:
                 amountToBuy = dic["numStocks"]
             print("double passed " + str(amountToBuy) + " " + ticker)
-            print("BID " + ticker + " " + str(price) + " " + str(amountToBuy-1))
-            print(shortRun("BID " + ticker + " " + str(price) + " " + str(int(amountToBuy-1))))
+            print("BID " + ticker + " " + str(price) + " " + str(amountToBuy))
+            print(shortRun("BID " + ticker + " " + str(price) + " " + str(int(amountToBuy))))
 
     myOrdersDict = getMyOrdersDict()
     r = random.random()
