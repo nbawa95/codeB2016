@@ -40,9 +40,6 @@ def subscribe(user, password):
     finally:
         sock.close()
 
-def shortRun(command):
-    run("Dodo", "pie", command)
-
 
 def getSecurityDict():
     securityInfos = run("Dodo", "pie", "SECURITIES")
@@ -61,16 +58,64 @@ def getSecurityDict():
     return securityDict
 
 
-def getoOrdersDict(ticker):
-    orders = shortRun()
+def shortRun(command):
+    return run("Dodo", "pie", command)
+
+
+def getOrdersDict(ticker):
+    orders = shortRun("ORDERS " + ticker)
+    orders = orders.split(' ')
+    orders = orders[1:]
+    ordersDict = []
+    for i in range(len(orders) // 4):
+        testDict = {
+            "status": orders[i*4],
+            "ticker": orders[i * 4 + 1],
+            "price": float(orders[i * 4 + 2]),
+            "numStocks": int(orders[i * 4 + 3])
+        }
+        ordersDict.append(testDict)
+    return ordersDict
+
+def getMyOrdersDict():
+    myOrders = shortRun("MY_ORDERS")
+    if myOrders == None:
+        return None
+    myOrders = myOrders.split(' ')[1:]
+    myOrdersDict = []
+    for i in range(len(myOrders) // 4):
+        testDict = {
+            "status": myOrders[i*4],
+            "ticker": myOrders[i * 4 + 1],
+            "price": float(myOrders[i * 4 + 2]),
+            "numStocks": int(myOrders[i * 4 + 3])
+        }
+        myOrdersDict.append(testDict)
+    return myOrdersDict
+
+
 
 def executeBuy(stockTuple):
     ticker = stockTuple[0]
     price = stockTuple[1]
 
+    myOrdersDict = getMyOrdersDict()
+    if myOrdersDict is not None:
+        for dic in myOrdersDict:
+            if dic["status"] == "BID" and dic["ticker"] == ticker:
+                return 0
 
-def goodBargain():
-    print "Ashay"
+
+
+    ordersDict = getOrdersDict(ticker)
+    print(ordersDict[0])
+    myMoney = float(shortRun("MY_CASH").split(' ')[1: ][0])
+    for dic in ordersDict:
+        if dic["status"] == "ASK" and dic["price"] >= price:
+            amountToBuy = myMoney//price
+            if amountToBuy > dic["numStocks"]:
+                amountToBuy = dic["numStocks"]
+            shortRun("BID " + ticker + " " + str(price + 1) + " " + str(amountToBuy))
 
 
 
@@ -81,9 +126,7 @@ except:
     run("Dodo", "pie", "CLOSE_CONNECTION")
 
 
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> origin/master
+
