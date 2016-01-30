@@ -1,6 +1,7 @@
 import socket
 import sys
-    
+
+
 def run(user, password, *commands):
     HOST, PORT = "codebb.cloudapp.net", 17429
     
@@ -39,6 +40,10 @@ def subscribe(user, password):
     finally:
         sock.close()
 
+def shortRun(command):
+    run("Dodo", "pie", command)
+
+
 def getSecurityDict():
     securityInfos = run("Dodo", "pie", "SECURITIES")
     securityInfos = securityInfos.split(' ')
@@ -52,6 +57,7 @@ def getSecurityDict():
             "volatility": securityInfos[i * 4 + 3]
         }
         securityDict.append(testDict)
+    print (securityDict)
     return securityDict
 
 def getAllTickers():
@@ -63,11 +69,18 @@ def getAllTickers():
         tickers.append(securityInfos[i * 4])
     return tickers
 
+def getoOrdersDict(ticker):
+    orders = shortRun()
+
+def executeBuy(stockTuple):
+    ticker = stockTuple[0]
+    price = stockTuple[1]
+
 def goodBargain():
     print "Ashay"
 
 try:
     securityInfos = getSecurityDict()
 except:
-    print "error"
+    print ("error")
     run("Dodo", "pie", "CLOSE_CONNECTION")
