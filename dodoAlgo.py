@@ -40,7 +40,20 @@ def subscribe(user, password):
         sock.close()
 
 try:
-    hi = run("Dodo", "pie", "SECURITIES")
-    print hi
+    securityInfos = run("Dodo", "pie", "SECURITIES")
+    securityInfos = securityInfos.split(' ')
+    securityInfos = securityInfos[1:]
+    securityDict = []
+    for i in range(len(securityInfos) / 4):
+        testDict = {
+            "ticker": securityInfos[i * 4],
+            "net_worth": securityInfos[i * 4 + 1],
+            "dividend_ratio": securityInfos[i * 4 + 2],
+            "volatility": securityInfos[i * 4 + 3]
+        }
+        # print testDict
+        securityDict.append(testDict)
+    print securityDict
 except:
+    print "error"
     run("Dodo", "pie", "CLOSE_CONNECTION")
