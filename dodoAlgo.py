@@ -220,7 +220,7 @@ try:
             print(shortRun("MY_SECURITIES"))
             print(shortRun("MY_ORDERS"))
             print(shortRun("MY_CASH"))
-        # checkDesperate()
+        checkDesperate()
 except:
     e = sys.exc_info()[0]
     print ("error " + str(e))
