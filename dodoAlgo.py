@@ -6,7 +6,7 @@ def run(user, password, *commands):
     HOST, PORT = "codebb.cloudapp.net", 17429
     
     data=user + " " + password + "\n" + "\n".join(commands) + "\nCLOSE_CONNECTION\n"
-
+    toReturn = ""
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -14,7 +14,7 @@ def run(user, password, *commands):
         sock.sendall(data)
         sfile = sock.makefile()
         rline = sfile.readline()
-        toReturn = ""
+
         while rline:
             toReturn += rline.strip()
             rline = sfile.readline()
@@ -46,7 +46,7 @@ def getSecurityDict():
     securityInfos = securityInfos.split(' ')
     securityInfos = securityInfos[1:]
     securityDict = []
-    for i in range(len(securityInfos) / 4):
+    for i in range(len(securityInfos) // 4):
         testDict = {
             "ticker": securityInfos[i * 4],
             "net_worth": securityInfos[i * 4 + 1],
@@ -61,7 +61,7 @@ def getAllTickers():
     securityInfos = securityInfos.split(' ')
     securityInfos = securityInfos[1:]
     tickers = []
-    for i in range(len(securityInfos) / 4):
+    for i in range(len(securityInfos) // 4):
         tickers.append(securityInfos[i * 4])
     return tickers
 
@@ -103,35 +103,42 @@ def getMyOrdersDict():
 
 
 def executeBuy(stockTuple):
+    if stockTuple is None:
+        print("Stock tuple is none")
+        return 0
     ticker = stockTuple[0]
     price = stockTuple[1]
-
-    myOrdersDict = getMyOrdersDict()
-    if myOrdersDict is not None:
-        for dic in myOrdersDict:
-            if dic["status"] == "BID" and dic["ticker"] == ticker:
-                return 0
 
 
 
     ordersDict = getOrdersDict(ticker)
-    print(ordersDict[0])
     myMoney = float(shortRun("MY_CASH").split(' ')[1: ][0])
     for dic in ordersDict:
         if dic["status"] == "ASK" and dic["price"] >= price:
             amountToBuy = myMoney//price
+
             if amountToBuy > dic["numStocks"]:
                 amountToBuy = dic["numStocks"]
-            shortRun("BID " + ticker + " " + str(price + 1) + " " + str(amountToBuy))
+            print("double passed " + str(amountToBuy) + " " + ticker)
+            print("BID " + ticker + " " + str(price) + " " + str(amountToBuy-1))
+            print(shortRun("BID " + ticker + " " + str(price) + " " + str(int(amountToBuy-1))))
+
+    myOrdersDict = getMyOrdersDict()
+    if myOrdersDict is not None:
+        print("passed")
+        for dic in myOrdersDict:
+            if dic["status"] == "BID" and dic["ticker"] == ticker:
+                print(shortRun("CLEAR_BID " + ticker))
+                
 
 
 def getAllAsks(ticker):
     orders = run("Dodo", "pie", "ORDERS " + str(ticker))
-    print orders
+    #print orders
     orders = orders.split(' ')
     orders = orders[1:]
     pricesOfAsks = []
-    for i in range(len(orders) / 4):
+    for i in range(len(orders) // 4):
         if orders[i * 4] == "ASK":
             pricesOfAsks.append(float(orders[i * 4 + 2]))
     return pricesOfAsks
@@ -141,20 +148,23 @@ def goodBargain():
     bestRatio = None
     bestCur = None
     for security in securities:
-        print security['ticker']
+        #print security['ticker']
         marketVal = float(security['net_worth'])
         dividendRatio = float(security['dividend_ratio'])
         for price in getAllAsks(security['ticker']):
             if (bestRatio is None) or ((marketVal / price) * dividendRatio > bestRatio):
                 bestRatio = (marketVal / price) * dividendRatio
                 bestCur = (security['ticker'], price)
-    print bestRatio
+    #print bestRatio
     return bestCur
 
-try:
-    print goodBargain()
-except:
-    e = sys.exc_info()[0]
-    print ("error " + str(e))
-    run("Dodo", "pie", "CLOSE_CONNECTION")
+yo = goodBargain()
+print(yo)
 
+executeBuy(yo)
+
+if yo is not None:
+    print(shortRun("ORDERS " + yo[0]))
+print(shortRun("MY_SECURITIES"))
+print(shortRun("MY_ORDERS"))
+print(shortRun("MY_CASH"))
