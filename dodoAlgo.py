@@ -54,9 +54,16 @@ def getSecurityDict():
             "volatility": securityInfos[i * 4 + 3]
         }
         securityDict.append(testDict)
-    print (securityDict)
     return securityDict
 
+def getAllTickers():
+    securityInfos = run("Dodo", "pie", "SECURITIES")
+    securityInfos = securityInfos.split(' ')
+    securityInfos = securityInfos[1:]
+    tickers = []
+    for i in range(len(securityInfos) / 4):
+        tickers.append(securityInfos[i * 4])
+    return tickers
 
 def shortRun(command):
     return run("Dodo", "pie", command)
@@ -118,15 +125,36 @@ def executeBuy(stockTuple):
             shortRun("BID " + ticker + " " + str(price + 1) + " " + str(amountToBuy))
 
 
+def getAllAsks(ticker):
+    orders = run("Dodo", "pie", "ORDERS " + str(ticker))
+    print orders
+    orders = orders.split(' ')
+    orders = orders[1:]
+    pricesOfAsks = []
+    for i in range(len(orders) / 4):
+        if orders[i * 4] == "ASK":
+            pricesOfAsks.append(float(orders[i * 4 + 2]))
+    return pricesOfAsks
+
+def goodBargain():
+    securities = getSecurityDict()
+    bestRatio = None
+    bestCur = None
+    for security in securities:
+        print security['ticker']
+        marketVal = float(security['net_worth'])
+        dividendRatio = float(security['dividend_ratio'])
+        for price in getAllAsks(security['ticker']):
+            if (bestRatio is None) or ((marketVal / price) * dividendRatio > bestRatio):
+                bestRatio = (marketVal / price) * dividendRatio
+                bestCur = (security['ticker'], price)
+    print bestRatio
+    return bestCur
 
 try:
-    securityInfos = getSecurityDict()
+    print goodBargain()
 except:
-    print ("error")
+    e = sys.exc_info()[0]
+    print ("error " + str(e))
     run("Dodo", "pie", "CLOSE_CONNECTION")
-
-
-
-
-
 
