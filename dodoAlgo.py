@@ -151,6 +151,9 @@ def goodBargain():
     print bestRatio
     return bestCur
 
+def iHaveMoney():
+    return (float(run("Dodo", "pie", "MY_CASH").split(" ").pop()) > 0)
+
 try:
     print goodBargain()
 except:
