@@ -39,7 +39,7 @@ def subscribe(user, password):
     finally:
         sock.close()
 
-try:
+def getSecurityDict():
     securityInfos = run("Dodo", "pie", "SECURITIES")
     securityInfos = securityInfos.split(' ')
     securityInfos = securityInfos[1:]
@@ -51,16 +51,17 @@ try:
             "dividend_ratio": securityInfos[i * 4 + 2],
             "volatility": securityInfos[i * 4 + 3]
         }
-        # print testDict
         securityDict.append(testDict)
     print (securityDict)
+    return securityDict
+
+def goodBargain():
+    print "Ashay"
+
+try:
+    securityInfos = getSecurityDict()
 except:
     print ("error")
     run("Dodo", "pie", "CLOSE_CONNECTION")
 
 
-
-def desperate(mySecurityDict) {
-    for key in mySecurityDict:
-
-}
