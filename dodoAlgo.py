@@ -53,7 +53,14 @@ try:
         }
         # print testDict
         securityDict.append(testDict)
-    print securityDict
+    print (securityDict)
 except:
-    print "error"
+    print ("error")
     run("Dodo", "pie", "CLOSE_CONNECTION")
+
+
+
+def desperate(mySecurityDict) {
+    for key in mySecurityDict:
+
+}
