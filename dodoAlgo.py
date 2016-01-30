@@ -176,7 +176,7 @@ def checkDesperate():
     mySecurities = getMySecurityDict()
     for security in mySecurities:
         dividendRatio = float(security["dividend_ratio"])
-        shares = float(security["shares"])
+        shares = int(security["shares"])
         ticker = security["ticker"]
         if (dividendRatio <= threshhold and shares > 0):
             #print "this is the one we should sell "+ ticker
