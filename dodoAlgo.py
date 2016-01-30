@@ -57,6 +57,7 @@ def getSecurityDict():
             "volatility": securityInfos[i * 4 + 3]
         }
         securityDict.append(testDict)
+    print (securityDict)
     return securityDict
 
 
@@ -76,10 +77,13 @@ def goodBargain():
 try:
     securityInfos = getSecurityDict()
 except:
-    print "error"
+    print ("error")
     run("Dodo", "pie", "CLOSE_CONNECTION")
 
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> origin/master
