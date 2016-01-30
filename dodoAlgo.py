@@ -54,6 +54,15 @@ def getSecurityDict():
         securityDict.append(testDict)
     return securityDict
 
+def getAllTickers():
+    securityInfos = run("Dodo", "pie", "SECURITIES")
+    securityInfos = securityInfos.split(' ')
+    securityInfos = securityInfos[1:]
+    tickers = []
+    for i in range(len(securityInfos) / 4):
+        tickers.append(securityInfos[i * 4])
+    return tickers
+
 def goodBargain():
     print "Ashay"
 
