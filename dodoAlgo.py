@@ -213,14 +213,14 @@ try:
     while True:
         if iHaveMoney:
             yo = goodBargain()
-            print(yo)
             executeBuy(yo)
             if yo is not None:
-                print(shortRun("ORDERS " + yo[0]))
-            print(shortRun("MY_SECURITIES"))
-            print(shortRun("MY_ORDERS"))
-            print(shortRun("MY_CASH"))
+                shortRun("ORDERS " + yo[0])
+            shortRun("MY_SECURITIES")
+            shortRun("MY_ORDERS")
+            shortRun("MY_CASH")
         checkDesperate()
+        subscribe("Dodo", "pie")
 except:
     e = sys.exc_info()[0]
     print ("error " + str(e))
