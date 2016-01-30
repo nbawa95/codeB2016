@@ -188,7 +188,7 @@ def checkDesperate():
                         maxPrice = price
                 #print "maxprice" + str(maxPrice)
                 askCommand = "ASK " + ticker + " " + str(maxPrice) + " " + str(int(shares))
-                run("Dodo", "pie", askCommand)
+                print(run("Dodo", "pie", askCommand))
                 #print ("end")
 
 def goodBargain():
