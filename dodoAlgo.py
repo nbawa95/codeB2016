@@ -5,7 +5,7 @@ def run(user, password, *commands):
     HOST, PORT = "codebb.cloudapp.net", 17429
     
     data=user + " " + password + "\n" + "\n".join(commands) + "\nCLOSE_CONNECTION\n"
-
+    toReturn = ""
     try:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -13,7 +13,7 @@ def run(user, password, *commands):
         sock.sendall(data)
         sfile = sock.makefile()
         rline = sfile.readline()
-        toReturn = ""
+        
         while rline:
             toReturn += rline.strip()
             rline = sfile.readline()
@@ -55,13 +55,71 @@ def getSecurityDict():
     print (securityDict)
     return securityDict
 
-def goodBargain():
-    print "Ashay"
+def getMySecurityDict():
+    mySecurityInfos = run("Dodo", "pie", "MY_SECURITIES")
+    mySecurityInfos = mySecurityInfos.split(' ')
+    mySecurityInfos = mySecurityInfos[1:]
+    #print mySecurityInfos
+    mySecurityDict = []
+    for i in range(len(mySecurityInfos) / 3):
+        testDict = {
+            "ticker": mySecurityInfos[i * 3],
+            "shares": mySecurityInfos[i * 3 + 1],
+            "dividend_ratio": mySecurityInfos[i * 3 + 2],
+        }
+        #print testDict
+        mySecurityDict.append(testDict)
+    print (mySecurityDict)
+    return mySecurityDict
+
+
+def getAllBids(ticker):
+    orders = run("Dodo", "pie", "ORDERS " + str(ticker))
+    #print orders
+    orders = orders.split(' ')
+    orders = orders[1:]
+    pricesOfBids = []
+    for i in range(len(orders) / 4):
+        if orders[i * 4] == "BID":
+            pricesOfBids.append(float(orders[i * 4 + 2]))
+        #print pricesOfBids
+    return pricesOfBids
+
+def checkDesperate():
+    threshhold = 0.00003
+    mySecurities = getMySecurityDict()
+    for security in mySecurities:
+        dividendRatio = float(security["dividend_ratio"])
+        shares = float(security["shares"])
+        ticker = security["ticker"]
+        if (dividendRatio <= threshhold and shares > 0):
+            #print "this is the one we should sell "+ ticker
+            allBids = getAllBids(ticker)
+            if len(allBids) != 0:
+                maxPrice = allBids[0]
+                for price in allBids:
+                    if maxPrice < price:
+                        maxPrice = price
+                #print "maxprice" + str(maxPrice)
+                askCommand = "ASK " + ticker + " " + str(maxPrice) + " " + str(int(shares))
+                run("Dodo", "pie", askCommand)
+                #print ("end")
+
+
+
+
+#def goodBargain():
+    #print "Ashay"
 
 try:
-    securityInfos = getSecurityDict()
+    #print (run("Dodo", "pie", "MY_SECURITIES"))
+    #checkDesperate()
+    #print (run("Dodo", "pie", "MY_ORDERS"))
+    print (run("Dodo", "pie", "SECURITIES"))
+    #print run("Dodo", "pie", "MY_CASH")
 except:
-    print ("error")
+    e = sys.exc_info()[0]
+    print (e)
     run("Dodo", "pie", "CLOSE_CONNECTION")
 
 
