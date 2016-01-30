@@ -172,7 +172,7 @@ def getAllBids(ticker):
     return pricesOfBids
 
 def checkDesperate():
-    threshhold = 0.00003
+    threshhold = 0.0001
     mySecurities = getMySecurityDict()
     for security in mySecurities:
         dividendRatio = float(security["dividend_ratio"])
