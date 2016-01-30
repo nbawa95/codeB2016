@@ -1,6 +1,6 @@
 import socket
 import sys
-
+import random
 
 def run(user, password, *commands):
     HOST, PORT = "codebb.cloudapp.net", 17429
@@ -124,10 +124,11 @@ def executeBuy(stockTuple):
             print(shortRun("BID " + ticker + " " + str(price) + " " + str(int(amountToBuy-1))))
 
     myOrdersDict = getMyOrdersDict()
+    r = random.random()
     if myOrdersDict is not None:
         print("passed")
         for dic in myOrdersDict:
-            if dic["status"] == "BID" and dic["ticker"] == ticker:
+            if dic["status"] == "BID" and dic["ticker"] == ticker and r >=0.5:
                 print(shortRun("CLEAR_BID " + ticker))
                 
 
@@ -162,7 +163,7 @@ def iHaveMoney():
     return (float(run("Dodo", "pie", "MY_CASH").split(" ").pop()) > 0)
 
 try:
-    while:
+    while True:
         if iHaveMoney:
             yo = goodBargain()
             print(yo)
@@ -172,7 +173,7 @@ try:
             print(shortRun("MY_SECURITIES"))
             print(shortRun("MY_ORDERS"))
             print(shortRun("MY_CASH"))
-        checkDesperate()
+        # checkDesperate()
 except:
     e = sys.exc_info()[0]
     print ("error " + str(e))
