@@ -215,10 +215,10 @@ try:
             yo = goodBargain()
             executeBuy(yo)
             if yo is not None:
-                shortRun("ORDERS " + yo[0])
-            shortRun("MY_SECURITIES")
-            shortRun("MY_ORDERS")
-            shortRun("MY_CASH")
+                print(shortRun("ORDERS " + yo[0]))
+            print(shortRun("MY_SECURITIES"))
+            print(shortRun("MY_ORDERS"))
+            print(shortRun("MY_CASH"))
         checkDesperate()
         subscribe("Dodo", "pie")
 except:
